@@ -15,9 +15,11 @@ var AutocompleteWidgetComponent = (function () {
     function AutocompleteWidgetComponent(elementRef, http) {
         var _this = this;
         this.elementRef = elementRef;
-        this.delay = 1000;
+        this.delay = 300;
         this.dropdown = false;
         this.jsonData = [];
+        this.products = [];
+        this.productCategories = [];
         this.http = http;
         // this.data.push(true);
         // this.data.push(1111);
@@ -29,17 +31,36 @@ var AutocompleteWidgetComponent = (function () {
             .debounceTime(this.delay)
             .distinctUntilChanged();
         // eventStream.subscribe(input => this.value.emit(input));
-        eventStream.subscribe(function (input) { return console.log(input); });
+        eventStream.subscribe(function (input) {
+            console.log(input);
+            if (_this.dropdown === false) {
+                _this.toggleDropdown();
+            }
+        });
     }
     AutocompleteWidgetComponent.prototype.stringFunction = function (argument1) {
         console.log(arguments);
     };
+    AutocompleteWidgetComponent.prototype.selectProduct = function (product) {
+        this.selectedProduct = product;
+        this.dropdown = false;
+        this.query = product.product_name;
+    };
+    AutocompleteWidgetComponent.prototype.addProduct = function () {
+        this.productCategories.push(this.selectedProduct);
+    };
+    AutocompleteWidgetComponent.prototype.removeProduct = function (index) {
+        this.productCategories.splice(index, 1);
+    };
     AutocompleteWidgetComponent.prototype.toggleDropdown = function () {
+        var _this = this;
         this.dropdown = !this.dropdown;
-        if (this.jsonData.length === 0) {
+        if (this.products.length === 0) {
             this.http.get('/data/response.json')
                 .map(function (res) { return res.json(); })
-                .subscribe(function (response) { return console.log(response.data.products); });
+                .subscribe(function (response) {
+                _this.products = response.data.products;
+            });
         }
     };
     AutocompleteWidgetComponent.prototype.ngOnInit = function () {

@@ -1,73 +1,90 @@
-<div class="form-group">
-	<div class="lookup">
-		<div class="input-group">
-			<div>{{ query }}</div>
-			<input
-				type="text"
-				name="lookup"
-				class="form-control"
-				autocomplete="off"
-				[(ngModel)]="query" />
-			<div class="input-group-btn">
-				<button type="button" class="btn btn-default" (click)="toggleDropdown($event)"><span class="glyphicon glyphicon-chevron-down"></span></button>
-				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
-			</div>
-		</div>
-		<div class="search-results dropdown" [class.open]="dropdown">
-			<div class="loader">...</div>
-			<div class="pagination btn-center">
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
-				<span class="box">1 / 1</span>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
-			</div>
-		</div>
-	</div>
-	<!-- <div lookup="products" lookup-model="vm.products" lookup-display-property="product_name" lookup-sort-property="colorme_id" lookup-direction-property="desc" lookup-selection-model="vm.selectedProduct" lookup-selection-callback="vm.addProduct()">
+<div>
+	<div class="form-group">
 		<div class="lookup">
 			<div class="input-group">
-				<input type="text" name="lookup" ng-model="query" ng-model-options="{ updateOn: 'default blur', debounce: 300 }" ng-change="resetGet()" class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" autocomplete="off" style="">
+				<input
+					type="text"
+					name="lookup"
+					class="form-control"
+					autocomplete="off"
+					[(ngModel)]="query" />
 				<div class="input-group-btn">
-					<button type="button" ng-click="toggleDropdown()" class="btn btn-default"><span class="glyphicon glyphicon-chevron-down"></span></button>
-					<button type="button" ng-click="add()" ng-if="!hideAddButton" class="btn btn-default ng-scope"><span class="glyphicon glyphicon-plus"></span></button>
+					<button type="button" class="btn btn-default" (click)="toggleDropdown($event)"><span class="glyphicon glyphicon-chevron-down"></span></button>
+					<button type="button" class="btn btn-default" (click)="addProduct()"><span class="glyphicon glyphicon-plus"></span></button>
 				</div>
 			</div>
-			<div class="search-results dropdown" ng-class="{ open: dropdown }" style="">
-				<ng-transclude>
-					<table class="table table-list ng-scope">
-						<tbody>
-							<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
-								<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153882.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153882.jpg"></td>
-								<td class="ng-binding">iittala/イッタラ/Teema/ティーマ/プレート 21cm/セラドングリーン</td>
-							</tr>
-							<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
-								<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153872.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153872.jpg"></td>
-								<td class="ng-binding">iittala/イッタラ/Teema/ティーマ/プレート 26cm/セラドングリーン</td>
-							</tr>
-							<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
-								<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54708941.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54708941.jpg"></td>
-								<td class="ng-binding">Steele Canvas Basket/スティールキャンバス バスケット/ラウンド</td>
-							</tr>
-							<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
-								<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54261531.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54261531.jpg"></td>
-								<td class="ng-binding">Steele Canvas Basket/スティールキャンバス バスケット/スクエア</td>
-							</tr>
-							<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
-								<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/50968335.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/50968335.jpg"></td>
-								<td class="ng-binding">【数量限定】iittala/イッタラ/Teema/ティーマ/マグ　300ml/レッド</td>
-							</tr>
-						</tbody>
-					</table>
-				</ng-transclude>
+			<div class="search-results dropdown" [class.open]="dropdown">
+				<table class="table table-list ng-scope">
+					<tbody>
+						<tr *ngFor="let product of products" (click)="selectProduct(product)" [class.active]="selectedProduct === product">
+							<td><img style="height:50px;" src="https://s3-ap-northeast-1.amazonaws.com{{product.image_uri}}"></td>
+							<td>{{ product.product_name }}</td>
+						</tr>
+					</tbody>
+				</table>
 				<div class="pagination btn-center">
-					<button class="btn btn-default" ng-click="getFirstPage()" ng-disabled="!canGetPrevPage()"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
-					<button class="btn btn-default" ng-click="getPrevPage()" ng-disabled="!canGetPrevPage()"><span class="glyphicon glyphicon-chevron-left"></span></button>
-					<span class="box ng-binding">2 / 28</span>
-					<button class="btn btn-default" ng-click="getNextPage()" ng-disabled="!canGetNextPage()"><span class="glyphicon glyphicon-chevron-right"></span></button>
-					<button class="btn btn-default" ng-click="getLastPage()" ng-disabled="!canGetNextPage()"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
+					<span class="box">1 / 1</span>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
 				</div>
 			</div>
 		</div>
-	</div> -->
+		<!-- <div lookup="products" lookup-model="vm.products" lookup-display-property="product_name" lookup-sort-property="colorme_id" lookup-direction-property="desc" lookup-selection-model="vm.selectedProduct" lookup-selection-callback="vm.addProduct()">
+			<div class="lookup">
+				<div class="input-group">
+					<input type="text" name="lookup" ng-model="query" ng-model-options="{ updateOn: 'default blur', debounce: 300 }" ng-change="resetGet()" class="form-control ng-valid ng-dirty ng-valid-parse ng-touched" autocomplete="off" style="">
+					<div class="input-group-btn">
+						<button type="button" ng-click="toggleDropdown()" class="btn btn-default"><span class="glyphicon glyphicon-chevron-down"></span></button>
+						<button type="button" ng-click="add()" ng-if="!hideAddButton" class="btn btn-default ng-scope"><span class="glyphicon glyphicon-plus"></span></button>
+					</div>
+				</div>
+				<div class="search-results dropdown" ng-class="{ open: dropdown }" style="">
+					<ng-transclude>
+						<table class="table table-list ng-scope">
+							<tbody>
+								<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
+									<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153882.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153882.jpg"></td>
+									<td class="ng-binding">iittala/イッタラ/Teema/ティーマ/プレート 21cm/セラドングリーン</td>
+								</tr>
+								<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
+									<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153872.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/55153872.jpg"></td>
+									<td class="ng-binding">iittala/イッタラ/Teema/ティーマ/プレート 26cm/セラドングリーン</td>
+								</tr>
+								<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
+									<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54708941.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54708941.jpg"></td>
+									<td class="ng-binding">Steele Canvas Basket/スティールキャンバス バスケット/ラウンド</td>
+								</tr>
+								<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
+									<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54261531.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/54261531.jpg"></td>
+									<td class="ng-binding">Steele Canvas Basket/スティールキャンバス バスケット/スクエア</td>
+								</tr>
+								<tr ng-repeat="product in vm.products" ng-click="vm.selectedProduct = product" ng-class="{ active: vm.selectedProduct === product }" class="ng-scope">
+									<td><img class="image" ng-src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/50968335.jpg" src="https://s3-ap-northeast-1.amazonaws.com/kurashicom-images/colorme/PA01034/348/product/50968335.jpg"></td>
+									<td class="ng-binding">【数量限定】iittala/イッタラ/Teema/ティーマ/マグ　300ml/レッド</td>
+								</tr>
+							</tbody>
+						</table>
+					</ng-transclude>
+					<div class="pagination btn-center">
+						<button class="btn btn-default" ng-click="getFirstPage()" ng-disabled="!canGetPrevPage()"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
+						<button class="btn btn-default" ng-click="getPrevPage()" ng-disabled="!canGetPrevPage()"><span class="glyphicon glyphicon-chevron-left"></span></button>
+						<span class="box ng-binding">2 / 28</span>
+						<button class="btn btn-default" ng-click="getNextPage()" ng-disabled="!canGetNextPage()"><span class="glyphicon glyphicon-chevron-right"></span></button>
+						<button class="btn btn-default" ng-click="getLastPage()" ng-disabled="!canGetNextPage()"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
+					</div>
+				</div>
+			</div>
+		</div> -->
+	</div>
+	<div class="form-group">
+		<div *ngFor="let category of productCategories; let i = index">
+			<div class="assigned-property-wrapper">
+				<span class="assigned-property">{{ category.product_name }}</span>
+				<i (click)="removeProduct(i)" class="property-remove-btn"></i>
+			</div>
+		</div>
+		<div class="clear-both"></div>
+	</div>
 </div>

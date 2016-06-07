@@ -13,11 +13,14 @@ import { Observable } from 'rxjs/Rx';
 export class AutocompleteWidgetComponent {
 	@Input() private name: string;
 	public query: string;
-	private delay: number = 1000;
+	private delay: number = 300;
 	private dropdown: boolean = false;
 	private data: Array<number|string>;
 	private jsonData: Array<string> = [];
 	private http: Http;
+	private products: Array<string> = [];
+	private selectedProduct: string;
+	private productCategories: Array<string> = [];
 
 	stringFunction(argument1: string): void {
 		console.log(arguments);
@@ -38,15 +41,36 @@ export class AutocompleteWidgetComponent {
 			.distinctUntilChanged();
 
 			// eventStream.subscribe(input => this.value.emit(input));
-			eventStream.subscribe(input => console.log(input));
+			eventStream.subscribe(input => {
+				console.log(input);
+				if (this.dropdown === false) {
+					this.toggleDropdown();
+				}
+			});
+	}
+
+	selectProduct(product) {
+		this.selectedProduct = product;
+		this.dropdown = false;
+		this.query = product.product_name;
+	}
+
+	addProduct() {
+		this.productCategories.push(this.selectedProduct);
+	}
+
+	removeProduct(index) {
+		this.productCategories.splice(index, 1);
 	}
 
 	toggleDropdown() {
 		this.dropdown = !this.dropdown;
-		if (this.jsonData.length === 0) {
+		if (this.products.length === 0) {
 			this.http.get('/data/response.json')
 		      .map(res => res.json())
-		      .subscribe(response => console.log(response.data.products));
+		      .subscribe(response => {
+				  this.products = response.data.products;
+			  });
 		}
 	}
 

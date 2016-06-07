@@ -1,3 +1,35 @@
 .btn {
 	height: 36px;
 }
+
+.select-wrapper .select-with-btn {
+  width: 83%;
+  float: left;
+}
+.select-wrapper .select-btn {
+  float: right;
+}
+.assigned-property-wrapper {
+  display: inline-block;
+  float: left;
+  border: #CCCCCC 1px solid;
+  margin-right: 0.9rem;
+  padding: 0.6rem 1.2rem;
+}
+.assigned-property-wrapper .property-remove-btn {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+.assigned-property-wrapper .property-remove-btn:before {
+  content: "\e014";
+}
