@@ -1,21 +1,43 @@
-<div class="form-group">
-	<div class="lookup">
-		<div class="input-group">
-			<input type="text" name="lookup" class="form-control" autocomplete="off" />
-			<div class="input-group-btn">
-				<button type="button" class="btn btn-default" {{action "toggleDropdown"}}><span class="glyphicon glyphicon-chevron-down"></span></button>
-				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+<div>
+	<div class="form-group">
+		<div class="lookup">
+			<div class="input-group">
+				{{ input type="text" name="lookup" class="form-control" autocomplete="off" value=query }}
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default" {{action "toggleDropdown"}}><span class="glyphicon glyphicon-chevron-down"></span></button>
+					<button type="button" class="btn btn-default" {{action "addProduct"}}><span class="glyphicon glyphicon-plus"></span></button>
+				</div>
+			</div>
+			<div class="search-results dropdown{{ if dropdown " open" }}">
+				<table class="table table-list ng-scope">
+					<tbody>
+						{{#each products as |product index|}}
+						<tr {{action "selectProduct" product index}} class="{{ if product.selected "active" }}">
+							<td><img style="height:50px;" src="https://s3-ap-northeast-1.amazonaws.com{{product.image_uri}}"></td>
+							<td>{{ product.product_name }}</td>
+						</tr>
+						{{/each}}
+					</tbody>
+				</table>
+				<div class="pagination btn-center">
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
+					<span class="box">1 / 1</span>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
+					<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
+				</div>
 			</div>
 		</div>
-		<div class="search-results dropdown{{ if dropdown " open" }}">
-			<div class="loader">...</div>
-			<div class="pagination btn-center">
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
-				<span class="box">1 / 1</span>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
-				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span><span class="glyphicon glyphicon-chevron-right"></span></button>
+	</div>
+	<div class="form-group">
+		{{#each productCategories as |product index|}}
+		<div>
+			<div class="assigned-property-wrapper">
+				<span class="assigned-property">{{ product.product_name }}</span>
+				<i {{action "removeProduct" index}} class="property-remove-btn"></i>
 			</div>
 		</div>
+		{{/each}}
+		<div class="clear-both"></div>
 	</div>
 </div>
