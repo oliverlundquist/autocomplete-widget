@@ -1,13 +1,19 @@
 <div class="form-group">
 	<div class="lookup">
 		<div class="input-group">
-			<input type="text" name="lookup" class="form-control" autocomplete="off" />
+			<div>{{ query }}</div>
+			<input
+				type="text"
+				name="lookup"
+				class="form-control"
+				autocomplete="off"
+				[(ngModel)]="query" />
 			<div class="input-group-btn">
-				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-down"></span></button>
+				<button type="button" class="btn btn-default" (click)="toggleDropdown($event)"><span class="glyphicon glyphicon-chevron-down"></span></button>
 				<button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
 			</div>
 		</div>
-		<div class="search-results dropdown">
+		<div class="search-results dropdown" [class.open]="dropdown">
 			<div class="loader">...</div>
 			<div class="pagination btn-center">
 				<button class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span></button>
