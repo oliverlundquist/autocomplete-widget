@@ -1,3 +1,21 @@
+<template>
+  <div id="app">
+    <h1>Dashboard</h1>
+    <autocomplete-widget></autocomplete-widget>
+  </div>
+</template>
+
+<script>
+import AutocompleteWidget from './components/AutocompleteWidget'
+
+export default {
+  components: {
+    AutocompleteWidget
+  }
+}
+</script>
+
+<style>
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -9745,3 +9763,4 @@ fieldset[disabled] .btn-action.nay.active {
   content: "\e014";
 }
 /*# sourceMappingURL=app.css.map */
+</style>
