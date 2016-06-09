@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>.letter { position: absolute; font-size:30px; }</style>
+</head>
+<body>
+	<div class="letter">m</div>
+	<div class="letter">y</div>
+	<div class="letter">s</div>
+	<div class="letter">t</div>
+	<div class="letter">o</div>
+	<div class="letter">r</div>
+	<div class="letter">e</div>
+	<div class="letter">.</div>
+	<div class="letter">n</div>
+	<div class="letter">o</div>
+	<script src="scripts/rx.all.js"></script>
+	<script>
+	// Rx.Observable.fromEvent(document, 'click')
+	// 	.map(function () {
+	// 		return 0;
+	// 	})
+	// 	.subscribe(function (value) {
+	// 		var letters = document.querySelectorAll('.letter');
+	// 		for(var i = 0; i < letters.length; i++) {
+	// 			letters[i].style.top = value;
+	// 		}
+	// 	});
+	(function () {
+		var letters = document.querySelectorAll('.letter');
+		for(var i = 0; i < letters.length; i++) {
+			(function (i) {
+				Rx.Observable.fromEvent(document, 'mousemove')
+					.throttle(5)
+					.map(function (event) {
+						return { x: event.clientX, y: event.clientY }
+					})
+					.delay(i * 100)
+					.subscribe(function (values) {
+						letters[i].style.top  = values.y + 'px';
+						letters[i].style.left = values.x + (i * 30) + 30 + 'px';
+					});
+			})(i);
+		}
+	})();
+	</script>
+</body>
+</html>
