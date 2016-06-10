@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redux basic example</title>
+        <script src="scripts/redux.min.js"></script>
+        <script src="scripts/vue.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <counter :state="state"></counter>
+        </div>
+        <script>
+            (function bootstrap(_window, _document) {
+                /**
+                 *  import { createStore, combineReducers } from 'redux';
+                 *  import Vue from 'vue'
+                 *  if we're running ES6 module import
+                 *  setting Mystore to window is purely a hack since we're not using ES6 modules
+                 */
+                _window.Mystore = {};
+                _window.Mystore.Reducers = { counter1: counter1, counter2: counter2 };
+                _window.Mystore.Redux = Redux.createStore(Redux.combineReducers(Mystore.Reducers));
+
+                /**
+                 *  import { Reducers } from './reducers';
+                 *  if we're running ES6 module import
+                 *  defining reducers here in purely a hack since we're not using ES6 modules
+                 */
+                function counter1(state, action) {
+                    if (typeof state === 'undefined') { return 0; }
+                    switch (action.type) {
+                        case 'INCREMENT':
+                          return state + 1
+                        case 'DECREMENT':
+                          return state - 1
+                        default:
+                          return state
+                    }
+                }
+
+                function counter2(state, action) {
+                    if (typeof state === 'undefined') { return 0; }
+                    switch (action.type) {
+                        case 'INCREMENT':
+                          return state + 2
+                        case 'DECREMENT':
+                          return state - 2
+                        default:
+                          return state
+                    }
+                }
+
+                /**
+                 *  VueJS: Child component
+                 */
+                Vue.component('counter', {
+                    template: '<div>' +
+                                    '<span>{{ state | json }}</span>' +
+                                    '<button v-on:click="increment">increment!</button>' +
+                                    '<button v-on:click="decrement">decrement!</button>' +
+                                '</div>',
+                    data: function () {
+                        return {
+                            dispatch: Mystore.Redux.dispatch
+                        }
+                    },
+                    props: ['state'],
+                    methods: {
+                        increment: function () {
+                            this.broadcast({ type: 'INCREMENT' });
+                        },
+                        decrement: function () {
+                            this.broadcast({ type: 'DECREMENT' });
+                        },
+                        broadcast: function (action) {
+                            this.dispatch(action); // Redux state
+                            this.$dispatch('refresh-state'); // VueJS state
+                        }
+                    }
+                })
+
+                /**
+                 *  VueJS: Parent component
+                 */
+                new Vue({
+                    el: '#app',
+                    data: function () {
+                        return {
+                            state: Mystore.Redux.getState(),
+                            getState: Mystore.Redux.getState
+                        };
+                    },
+                    events: {
+                        'refresh-state': function () {
+                            this.$set('state', this.getState());
+                        }
+                    }
+                })
+            })(window, document);
+            // window.addEventListener("load", function () {})(window, document);
+        </script>
+    </body>
+</html>

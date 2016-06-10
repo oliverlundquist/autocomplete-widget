@@ -6,15 +6,12 @@ var DemoComponent = (function () {
         this.onlyStringArray = [];
         this.stringOrNumberArray = [];
         // 2. wrong argument type
-        // this.demoStringFunction(222);
+        this.demoStringFunction(222);
         // 4. wrong array type
-        // this.stringOrNumberArray.push('abc');
-        // this.stringOrNumberArray.push(123);
-        // this.stringOrNumberArray.push(true);
+        this.stringOrNumberArray.push('abc');
+        this.stringOrNumberArray.push(123);
+        this.stringOrNumberArray.push(true);
     }
-    DemoComponent.prototype.demoStringFunction = function (demoArgument1) {
-        console.log(demoArgument1);
-    };
     return DemoComponent;
 }());
 exports.DemoComponent = DemoComponent;
