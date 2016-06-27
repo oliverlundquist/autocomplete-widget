@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redux basic example</title>
+        <script src="scripts/redux.min.js"></script>
+        <script src="scripts/jquery.min.js"></script>
+        <style>
+            #sidebar { width:200px; height:500px; float:left; background-color: #aaa; }
+            #sidebar li.sidebar-btn { cursor: pointer; }
+            #sidebar li.active { color: #fff; }
+            #view { width:500px; height: 500px; float: left; background-color: #eee; }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <div id="sidebar">
+                <ul>
+                    <li class="sidebar-btn" data-app-view="index">Index</li>
+                    <li class="sidebar-btn" data-app-view="about">About</li>
+                    <li class="sidebar-btn" data-app-view="contact-us">Contact Us</li>
+                </ul>
+            </div>
+            <div id="view">
+                <!-- main content -->
+            </div>
+        </div>
+        <script>
+            (function bootstrap(_window, _document_, _jQ, _Redux) {
+                var sidebarState = _Redux.createStore(sidebarStateReducer);
+                var viewState    = _Redux.createStore(viewStateReducer);
+                var globalState  = _Redux.createStore(_Redux.combineReducers({ sidebar: sidebarStateReducer, view: viewStateReducer }));
+
+                // subscribe!
+                sidebarState.subscribe(function () { sidebarStateRenderer(sidebarState.getState()) });
+                viewState.subscribe(function () { viewStateRenderer(viewState.getState()) });
+                globalState.subscribe(function () { globalStateRenderer(globalState.getState()) });
+
+                // dispatch!
+                _jQ('#sidebar').on('click', 'li.sidebar-btn', function () {
+                    var view = _jQ(this).data('appView');
+                    var index = _jQ(this).index();
+
+                    sidebarState.dispatch({ type: 'SELECT_VIEW', view: view, index: index });
+                    viewState.dispatch({ type: 'CHANGE_VIEW', view: view });
+                    globalState.dispatch({ type: 'BACKGROUND_COLOR' });
+                });
+
+                /**********************************
+                 ** SIDEBAR
+                 **********************************/
+
+                // reduce!
+                function sidebarStateReducer(state, action) {
+                    if (typeof state === 'undefined') { return { view: 'index' }; }
+                    switch (action.type) {
+                        case 'SELECT_VIEW':
+                            return Object.assign(state, { view: action.view }, { index: action.index });
+                        case 'BACKGROUND_COLOR':
+                            return Object.assign(state, { color: '#ddd' });
+                        default:
+                            return state;
+                    }
+                    return state;
+                }
+
+                // render!
+                function sidebarStateRenderer(sidebarState) {
+                    console.log('-------');
+                    console.log('sidebar', sidebarState);
+                    _jQ('#sidebar li.sidebar-btn').removeClass('active');
+                    _jQ('#sidebar li.sidebar-btn').eq(sidebarState.index).addClass('active');
+                }
+
+                /**********************************
+                 ** VIEW
+                 **********************************/
+
+                 // reduce!
+                 function viewStateReducer(state, action) {
+                    if (typeof state === 'undefined') { return { view: 'index' }; }
+                    switch (action.type) {
+                        case 'CHANGE_VIEW':
+                            return Object.assign(state, { view: action.view });
+                        case 'BACKGROUND_COLOR':
+                            return Object.assign(state, { color: '#eee' });
+                        default:
+                            return state;
+                    }
+                    return state;
+                 }
+
+                 // render!
+                function viewStateRenderer(viewState) {
+                    console.log('view', viewState);
+                    _jQ('#view').html('<h1>' + viewState.view + '</h1>');
+                }
+
+                /**********************************
+                 ** GLOBAL
+                 **********************************/
+
+                function globalStateRenderer(globalState) {
+                    console.log('sidebar', globalState.sidebar, 'view', globalState.view);
+                }
+
+            })(window, document, window.jQuery, window.Redux);
+            // window.addEventListener("load", function () {})(window, document);
+        </script>
+    </body>
+</html>
